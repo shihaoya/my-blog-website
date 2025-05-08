@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import {toggleDark} from './hooks/dark.ts'
-import {useDark, useMouse, useRafFn, useToggle} from '@vueuse/core'
-import {onBeforeUnmount, onMounted, reactive, ref} from 'vue'
+import {useDark, useMouse, useToggle} from '@vueuse/core'
+import {onBeforeUnmount, ref} from 'vue'
 import {randomNumber, randomRGB, randomSimilarColor} from './utils'
-function click(e) {
+function click(e: MouseEvent) {
   toggleDark(e)
   const isDark = useDark()
   useToggle(isDark)
