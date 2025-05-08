@@ -3,6 +3,7 @@ import eslintConfigPrettier from 'eslint-config-prettier';
 import eslintPluginVue from 'eslint-plugin-vue';
 import globals from 'globals';
 import typescriptEslint from 'typescript-eslint';
+import unocss from '@unocss/eslint-config/flat'
 
 export default typescriptEslint.config(
     { ignores: ['*.d.ts', '**/coverage', '**/dist'] },
@@ -11,6 +12,7 @@ export default typescriptEslint.config(
             eslint.configs.recommended,
             ...typescriptEslint.configs.recommended,
             ...eslintPluginVue.configs['flat/recommended'],
+            unocss,
         ],
         files: ['**/*.{ts,vue}'],
         languageOptions: {

@@ -1,30 +1,48 @@
 <script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
+import {toggleDark} from './hooks/dark.ts'
+import {useDark, useMouse, useRafFn, useToggle} from '@vueuse/core'
+import {onBeforeUnmount, onMounted, reactive, ref} from 'vue'
+import {randomNumber, randomRGB, randomSimilarColor} from './utils'
+function click(e) {
+  toggleDark(e)
+  const isDark = useDark()
+  useToggle(isDark)
+}
+let { x, y } = useMouse()
+let color = ref(randomRGB())
+let radius = ref(50)
+let timer = setInterval(() => {
+  color.value = randomSimilarColor(color.value)
+  radius.value = randomNumber(10, 50)
+}, 100)
+onBeforeUnmount(() => {
+  clearInterval(timer)
+})
 </script>
 
 <template>
-  <div>
-    <a href="https://vite.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
-  </div>
-  <HelloWorld msg="Vite + Vue" />
+  <button @click="click">切换主题</button>
+  <!-- 鼠标的背景 -->
+  <div class="mouse-bg" w="100" h="100"
+       :style="{
+          left: `${(x || -9999)}px`,
+          top: `${(y || -9999)}px`,
+          '--color': color,
+          'border-radius': radius + '%'
+        }"
+  ></div>
 </template>
 
 <style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
+.mouse-bg {
+  position: fixed;
+  z-index: -1;
+  background-image: radial-gradient(var(--color) 10%, transparent 80%);
+  opacity: 0.5;
+  filter: blur(10px);
+  transform: translate(-50%, -50%) scale(0.5);
+  pointer-events: none;
+  user-select: none;
+  transition: 0.5s border-radius ease;
 }
 </style>
